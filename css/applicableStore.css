@@ -1,0 +1,65 @@
+
+.store-list{
+	width: 100%;
+	height: auto;
+}
+.store-list .list{
+	height: 130px;
+	width: 100%;
+	color: #827462;
+	font-size: 20px;
+	position: relative;
+	border-bottom: 2px solid #E7DFD4;
+}
+.sign-dian{
+	width: 20px;
+	height: 20px;
+	border-radius: 3px;
+	position: absolute;
+	left: 40px;
+	top: 50%;
+	background-color: #41C6A2;
+	-webkit-transform: translateY(-50%);
+  	transform: translateY(-50%);
+ 	-moz-transform:translateY(-50%);
+}
+.store-name{
+	position: absolute;
+	left: 90px;
+	top: 36px;
+	font-weight: 700;
+	letter-spacing: 1px;
+}
+.store-name::after{
+	content: '';
+	display: block;
+	height: 1px;
+	width: 48px;
+	background-color: #827462;
+	position: absolute;
+	bottom: -3px;
+	left: 0;
+}
+.stroe-addr{
+	position: absolute;
+	left: 90px;
+	bottom: 32px;
+}
+.store-phone{
+	position: absolute;
+	right: 40px;
+	top: 50%;
+	font-size: 55px;
+	color: #41C6A2;
+	-webkit-transform: translateY(-50%);
+  	transform: translateY(-50%);
+ 	-moz-transform:translateY(-50%);
+}
+
+
+
+
+
+
+
+

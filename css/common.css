@@ -4,6 +4,17 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+body {
+    font-family: 'Helvetica Neue',Helvetica,sans-serif;
+    font-size: 16px;
+    line-height: 21px;
+    color: #000;
+    background-color: white;
+    -webkit-overflow-scrolling: touch;
+}
+.mui-content{
+	background-color: white;
+}
 /*清除浮动*/
 .clearfix:before,
 .clearfix:after {
@@ -14,16 +25,7 @@
 .clearfix:after {
     clear: both;
 }
-/*遮罩层*/
-.popup{
-	position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 998;
-    background-color: rgba(0,0,0,.3);
-}
+
 
 
 
