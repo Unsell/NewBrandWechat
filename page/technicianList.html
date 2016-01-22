@@ -111,90 +111,15 @@
 							<div class="wifi-password">54145155455</div>
 						</li>
 					</ol>
-				</div>
-				<div class="popup-collect">
-					<span class="mui-icon mui-icon-arrowup"></span>
+					<div class="wifi-annotation">注：长按可复制密码！</div>
+					<div class="popup-collect">
+						<span class="mui-icon mui-icon-arrowup"></span>
+					</div>
 				</div>
 			</div>
 		</div>
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript">
-			$(function(){
-				$(document).on('tap','i',function(){
-					if($(this).hasClass('fa-thumbs-o-up')){
-						$(this).removeClass('fa-thumbs-o-up animation-delete');
-						$(this).addClass('fa-thumbs-up animation-zan');
-						var praise_num = $(this).parent().parent().find('.praise-nums').find('span');
-						praise_num.html(parseInt(praise_num.html())+1);
-					}else{
-						$(this).removeClass('fa-thumbs-up animation-zan');
-						$(this).addClass('fa-thumbs-o-up animation-delete');
-						var praise_num = $(this).parent().parent().find('.praise-nums').find('span');
-						praise_num.html(parseInt(praise_num.html())-1);
-					}
-				});
-			})
-		</script>
 		<script src="../js/mui.min.js"></script>
-		<script>
-//			mui.init({
-//				pullRefresh: {
-//					container: '#pullrefresh',
-//					down: {
-//						callback: pulldownRefresh
-//					},
-//					up: {
-//						contentrefresh: '正在加载...',
-//						callback: pullupRefresh
-//					}
-//				}
-//			});
-			/**
-			 * 下拉刷新具体业务实现
-			 */
-			function pulldownRefresh() {
-				setTimeout(function() {
-					var table = document.body.querySelector('.mui-table-view');
-					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					for (var i = cells.length, len = i + 3; i < len; i++) {
-						var li = document.createElement('li');
-						li.className = 'mui-table-view-cell';
-						li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
-						//下拉刷新，新纪录插到最前面；
-						table.insertBefore(li, table.firstChild);
-					}
-					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
-				}, 1500);
-			}
-			var count = 0;
-			/**
-			 * 上拉加载具体业务实现
-			 */
-			function pullupRefresh() {
-				setTimeout(function() {
-					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
-					var table = document.body.querySelector('.mui-table-view');
-					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					for (var i = cells.length, len = i + 20; i < len; i++) {
-						var li = document.createElement('li');
-						li.className = 'mui-table-view-cell';
-						li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
-						table.appendChild(li);
-					}
-				}, 1500);
-			}
-//			if (mui.os.plus) {
-//				mui.plusReady(function() {
-//					setTimeout(function() {
-//						mui('#pullrefresh').pullRefresh().pullupLoading();
-//					}, 1000);
-//
-//				});
-//			} else {
-//				mui.ready(function() {
-//					mui('#pullrefresh').pullRefresh().pullupLoading();
-//				});
-//			}
-		</script>
+		<script src="../js/technicianList.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>
