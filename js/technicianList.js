@@ -18,18 +18,11 @@ $(function(){
 	var boxInfor = $('.popup-wifi-infor'),
 		wifiInfor = $('.box-wifi-infor');
 	
-	$('body').on('tap','.user-infor-header',function(){
-		boxInfor.show();
-		wifiInfor.css({
-			'display':'block',
-			'top': -wifiInfor.height()
-		});
-		wifiInfor.animate({'top':0});
+	$('body').on('tap','.user-WIFI',function(){
+		mui('#boxWifiInfor').popover('toggle');
 	});
 	$('body').on('tap','.popup-collect',function(){
-		wifiInfor.removeClass('show').hide(function(){
-			boxInfor.hide();
-		});
+		mui('#boxWifiInfor').popover('toggle');
 		
 	})
 	

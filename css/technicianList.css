@@ -17,6 +17,7 @@
 	background-color: #E7DFD4;
 }
 .user-infor-header .user-image{
+	display: block;
 	position: absolute;
 	left: 40px;
 	top: 8px;
@@ -249,25 +250,29 @@
 	}
 }
 /*弹窗-wifi信息*/
-.popup-wifi-infor{
-	display: none;
+
+#boxWifiInfor{
+	position: fixed;
+	left: 0;
+	top: 0;
+	
 }
 .box-wifi-infor{
 	width: 100%;
-	display: none;
 	height: auto;
-	position: absolute;
-	left: 0;
 	background-color: white;
-	-webkit-transition: all .5s ease-in-out;
-  	-moz-transition: all .5s ease-in-out;
-  	-ms-transition: all .5s ease-in-out;
-  	-o-transition: all .5s ease-in-out;
-  	transition: all .5s ease-in-out;
 }
-.box-wifi-infor.show{
-	top: 0;
+.mui-popover.mui-popover-action{
+	-webkit-transform: translate3d(0,-100%,0);
+    transform: translate3d(0,-100%,0);
 }
+.box-wifi-infor.active{
+	/*display: block;*/
+	opacity: 1;
+	-webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+}
+
 .user-infor{
 	width: 100%;
 	text-align: center;

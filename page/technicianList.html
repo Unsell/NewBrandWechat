@@ -1,3 +1,18 @@
+<!--<?php
+require "/data/api/config/config.core.php";
+require_once "/data/api/class/jssdk.php";
+$jssdk = new JSSDK(appID, appsecret);
+$signPackage = $jssdk->GetSignPackage();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="title" content="觅技 - 选择谁服务您，这本来就是您的权利" /> 
+  <meta name="keywords" content="挑选技师，水疗SPA" /> 
+  <meta name="description" content="选择谁服务您，这本来就是您的权利" />
+  <title>觅技</title>
+</head>-->
 <!DOCTYPE html>
 <html>
 	<head>
@@ -14,9 +29,9 @@
 	<body>
 		<div class="mui-content">
 			<div class="user-infor-header">
-				<div class="user-image">
+				<a class="user-image" href="myCoupons.html">
 					<img src="../image/4.jpg" width="100%" height="100%"/>
-				</div>
+				</a>
 				<div class="user-coupons">
 					<div class="coupons-nums">15</div>
 					<span>优惠劵</span>
@@ -87,21 +102,17 @@
 				</div>
 			</div>
 			<!--弹窗-WI-FI-->
-			<div class="mui-backdrop popup-wifi-infor">
+			<div id="boxWifiInfor" class="mui-popover mui-popover-action">
 				<div class="box-wifi-infor">
 					<div class="user-infor">
-							<div class="user-image">
-								<img src="../image/4.jpg" width="100%" height="100%"/>
-								<div class="box-arrow-bottom"></div>
-							</div>
+						<div class="user-image">
+							<img src="../image/4.jpg" width="100%" height="100%"/>
+							<div class="box-arrow-bottom"></div>
+						</div>
 						<div class="user-name">未验证</div>
 						<div class="diamond"><div></div></div>
 					</div>
 					<ol class="wifi-list">
-						<li>
-							<div class="wifi-name">Linkke-1</div>
-							<div class="wifi-password">54145155455</div>
-						</li>
 						<li>
 							<div class="wifi-name">Linkke-1</div>
 							<div class="wifi-password">54145155455</div>
