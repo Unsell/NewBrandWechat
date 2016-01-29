@@ -1,4 +1,5 @@
-
+//var try2 = localStorage.getItem('try1');
+//alert(try2);
 var userImage = document.querySelector('.user-image'),
 	popupClose = document.querySelector('.popup-close'),
 	btnSubmit = document.querySelector('.submit');

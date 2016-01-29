@@ -55,9 +55,9 @@
 	height: 35px;
 	padding: 7px;
 	background-color: white;
-	-webkit-transform: translateX(-22px) rotate(45deg);
-  	transform: translateX(-22px) rotate(45deg);
- 	-moz-transform:translateX(-22px) rotate(45deg);
+	-webkit-transform: translateX(-50%) rotate(45deg);
+  	transform: translateX(-50%) rotate(45deg);
+ 	-moz-transform:translateX(-50%) rotate(45deg);
   	position: absolute;
   	bottom: -19px;
   	left: 50%;
@@ -225,9 +225,11 @@
 }
 .popup-header .popup-close{
 	float: right;
-	font-size: 30px;
 	margin-right: 30px;
-	margin-top: 23px;
+	margin-top: 10px;
+}
+.popup-header .popup-close span{
+	font-size: 50px;
 }
 .popup-content{
 	width: 400px;

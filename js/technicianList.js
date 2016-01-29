@@ -1,5 +1,12 @@
 
+
+
 $(function(){
+//	var asd = 1222;
+//	
+//	localStorage.setItem('try1',asd);
+	
+	$('#pullrefresh').css('height',window.innerHeight-$('.mui-content').height());
 	// 点赞动画
 	$(document).on('tap','i',function(){
 		if($(this).hasClass('fa-thumbs-o-up')){
