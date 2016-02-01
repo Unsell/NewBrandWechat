@@ -90,6 +90,7 @@
 	position: relative;
 }
 .box-coupons-can-use{
+	margin-top: -6px;
 	color: #827462;
 	background-color: white;
 }

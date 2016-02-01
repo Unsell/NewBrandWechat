@@ -342,8 +342,12 @@
 	margin: 58px 0 0 250px;
 }
 .wifi-list>li{
-	height: 80px;
+	height: 90px;
 	position: relative;
+	-moz-user-select: text;  
+	-webkit-user-select: text;  
+	-ms-user-select: text; 
+	user-select: text;
 }
 .wifi-list .wifi-name{
 	width: auto;
@@ -369,14 +373,15 @@
 }
 .wifi-list .wifi-password{
 	position: absolute;
-	bottom: 28px;
+	bottom: 33px;
 	letter-spacing: 3px;
 	left: 0;
-	font-size: 20px;
+	font-size: 22px;
 	color: black;
-	-moz-user-select: text !important;  
-	-webkit-user-select: text !important;  
-	-ms-user-select: text !important; 
+	-moz-user-select: text;  
+	-webkit-user-select: text;  
+	-ms-user-select: text; 
+	user-select: text;
 }
 .wifi-annotation{
 	text-align: center;
