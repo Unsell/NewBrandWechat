@@ -10,15 +10,17 @@ $(function(){
 	
 	var relay, // 存储全局配置参数
 		userInfor,  // 存储用户信息
+		likeList,  // 存储技师点赞数
 		couponList;  // 存储用户代金券数组
+		//technicianList;  //存储技师列表
 	
 	
 	var isRelay = window.localStorage.getItem('relay');
 	var relayTime = window.localStorage.getItem('relayTime');
-	var sid = getrequest('sid'),
-		openid = getrequest('openid'),
-		requestTime = getrequest('tm'),
-		requestTkey = getrequest('tkey');
+	var sid = '625651511454314015876f4fd0c7d5801543716ab20a8b4b33',//getrequest('sid'),
+		openid = 'oDhcauLqRsII1wdnIxRGt7ChR798',//getrequest('openid'),
+		requestTime = 1454385206,//getrequest('t'),
+		requestTkey = '624542387633624f76453669765651511454385206c4a6ae28c73a2bf4332cdfe0ffb6eabd';//getrequest('tkey');
 	
 	// 获取全局配置
 	if (isRelay != null && (isRelay == '1' || isRelay == '0') && relayTime != '' && relayTime.length == 10) {
@@ -30,7 +32,7 @@ $(function(){
 			window.localStorage.setItem('relayTime', '');
 		}
 	} else {
-		$.post('../api/apps/config.php',{sid: sid}, function(e) {
+		$.post('../../api/apps/config.php',{sid: sid}, function(e) {
 			if(e.errcode==='1001'){
 				var now = Date.now().toString().substring(0,10);
 				window.localStorage.setItem('relay',e.relay);
@@ -42,7 +44,7 @@ $(function(){
 	}
 	
 	// 定时退出
-	$.post('../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
+	$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
 		if(e.errCode !== '1001'){
 			// 跳转页面
 			
@@ -50,7 +52,7 @@ $(function(){
 	}, "json");
 	
 	// 获取用户信息
-	$.post('../api/apps/getinfo.php',{openid: openid}, function(e) {
+	$.post('../../api/apps/getinfo.php',{openid: openid}, function(e) {
 		if(e.errCode==='1001'){
 			window.localStorage.setItem('userInfor', e);
 			$('.user-image').find('img').attr('src',e.headimgurl);
@@ -60,7 +62,7 @@ $(function(){
 	}, "json");
 	
 	// 获取代金券列表
-	$.post('../api/apps/coupon.php',{openid: openid}, function(e) {
+	$.post('../../api/apps/coupon.php',{openid: openid}, function(e) {
 		if(e.errCode==='1001'){
 			window.localStorage.setItem('couponList', e.couponList);
 			$('.coupons-nums').html(e.couponList.length);
@@ -69,16 +71,67 @@ $(function(){
 		}
 	}, "json");
 	
+	// 获取技师点赞列表
+	$.post('../../api/apps/like.php',{sid: sid}, function(e) {
+		if(e.errCode==='1001'){
+			window.localStorage.setItem('likeList', e.like);
+		}else{
+			mui.toast(e.msg);
+		}
+	}, "json");
+	
+	// 获取技师列表
+	var pn=10,p=1,pageCount = 0;
+	$.post('../../api/apps/service.php',{sid: sid, pn: pn}, function(e) {
+		if(e.errCode==='1001'){
+			p = e.currentPage; // 数据当前页
+			pageCount = e.pageCount; // 会所的技师总数
+			var serviceList = e.servicelist;
+			var table = document.body.querySelector('.mui-table-view');
+			for(var i = 0; i<serviceList.length; i++){
+				var li = document.createElement('li');
+					li.className = 'box-technician-infor';
+					var str = '<div class="technician-number">'+ serviceList[i].mid +'号</div>'+
+									'<div class="technician-name">'+ serviceList[i].nickname +'</div>'+
+									'<div class="technician-image">'+
+										'<img src="'+ serviceList[i].picurl +'" width="100%" height="100%"/>'+
+									'</div>'+
+									'<div class="praise-nums">最近<span data-mid="'+ serviceList[i].mid +'">';
+						var like = window.localStorage.getItem('like_'+serviceList[i].mid);
+						if (like != null && !isNaN(like)) {
+							str+=like+'</span>次</div>'+
+									'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
+									'<div class="praise">'+
+										'<i class="fa fa-thumbs-o-up"></i>'+
+									'</div>';
+						}
+					li.innerHTML = str;
+				table.appendChild(li);
+			}
+		}else{
+			mui.toast(e.msg);
+		}
+	}, "json");
+	
+	
 	
 	// 点赞动画
 	$(document).on('tap','i',function(){
+		// 定时退出
+		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
+			if(e.errCode !== '1001'){
+				// 跳转页面
+				
+			}
+		}, "json");
 		if($(this).hasClass('fa-thumbs-o-up')){
 			$(this).removeClass('fa-thumbs-o-up animation-delete');
 			$(this).addClass('fa-thumbs-up animation-zan');
 			var praise_num = $(this).parent().parent().find('.praise-nums').find('span');
 			praise_num.html(parseInt(praise_num.html())+1);
+			var mid = $(this).parent().parent().find('.praise-nums').find('span').attr('data-mid')
 			// 点赞数目加一
-			$.post('../api/apps/wifi.php',{action: 'set',sid: sid,mid: $(this).attr('mid')}, function(e) {
+			$.post('../../api/apps/like.php',{action: 'set',sid: sid,mid: mid}, function(e) {
 				if(e.errCode==='1001'){
 					return ;
 				}else{
@@ -98,15 +151,23 @@ $(function(){
 		wifiInfor = $('.box-wifi-infor');
 	
 	$('body').on('tap','.user-WIFI',function(){
+		// 定时退出
+		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
+			if(e.errCode !== '1001'){
+				// 跳转页面
+				
+			}
+		}, "json");
 		mui('#boxWifiInfor').popover('toggle');
 		// 获取店铺WIFI列表 
-		$.post('../api/apps/wifi.php',{sid: sid}, function(e) {
+		$.post('../../api/apps/wifi.php',{sid: sid}, function(e) {
 			if(e.errCode==='1001'){
 				var strWifiList='';
-				for(var i=0; i<e.wifiList.length; i++){
+				var wifiList = e.wifilist;
+				for(var i=0; i<wifiList.length; i++){
 					strWifiList += '<li>'+
-										'<div class="wifi-name">'+e.wifiList[i].wifiname+'</div>'+
-										'<div class="wifi-password">'+e.wifiList[i].wifipass+'</div>'+
+										'<div class="wifi-name">'+wifiList[i].wifiname+'</div>'+
+										'<div class="wifi-password">'+wifiList[i].wifipass+'</div>'+
 									'</li>';
 				};
 				$('.wifi-list').append(strWifiList);
@@ -116,6 +177,13 @@ $(function(){
 		}, "json");
 	});
 	$('body').on('tap','.popup-collect',function(){
+		// 定时退出
+		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
+			if(e.errCode !== '1001'){
+				// 跳转页面
+				
+			}
+		}, "json");
 		mui('#boxWifiInfor').popover('toggle');
 		$('.wifi-list').children().remove();
 	});
@@ -124,81 +192,140 @@ $(function(){
 	
 	
 	
+	mui.init({
+		pullRefresh: {
+			container: '#pullrefresh',
+			down: {
+				callback: pulldownRefresh
+			},
+			up: {
+				contentrefresh: '正在加载...',
+				callback: pullupRefresh
+			}
+		}
+	});
+	/**
+	 * 下拉刷新具体业务实现
+	 */
 	
 	
-	
-	
-	
-	
-})
+	function pulldownRefresh() {
+		// 定时退出
+		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
+			if(e.errCode !== '1001'){
+				// 跳转页面
+				
+			}
+		}, "json");
+		// 获取技师点赞列表
+		$.post('../../api/apps/like.php',{sid: sid}, function(e) {
+			if(e.errCode==='1001'){
+				var likeList = e.like;
+				for (var i = 0; i < likeList.length; i++) {
+					window.localStorage.setItem('like_'+likeList[i].mid, likeList[i].like);
+				}
+				
+				
+			}else{
+				mui.toast(e.msg);
+			}
+		}, "json");
+		setTimeout(function() {
+			$.post('../../api/apps/service.php',{sid: sid,p: 1, pn: pn}, function(e) {
+				if(e.errCode==='1001'){
+					p = e.currentPage; // 数据当前页
+					pageCount = e.pageCount; // 会所的技师总数
+					var serviceList = e.servicelist;
 
-
-mui.init({
-	pullRefresh: {
-		container: '#pullrefresh',
-		down: {
-			callback: pulldownRefresh
-		},
-		up: {
-			contentrefresh: '正在加载...',
-			callback: pullupRefresh
+					var table = $('.mui-table-view');
+					table.children().remove();
+					for(var i = 0; i<serviceList.length; i++){
+						var li = document.createElement('li');
+						li.className = 'box-technician-infor';
+						var str = '<div class="technician-number">'+ serviceList[i].mid +'号</div>'+
+										'<div class="technician-name">'+ serviceList[i].nickname +'</div>'+
+										'<div class="technician-image">'+
+											'<img src="'+ serviceList[i].picurl +'" width="100%" height="100%"/>'+
+										'</div>'+
+										'<div class="praise-nums">最近<span data-mid="'+ serviceList[i].mid +'">';
+							var like = window.localStorage.getItem('like_'+serviceList[i].mid);
+							if (like != null && !isNaN(like)) {
+								str+=like+'</span>次</div>'+
+										'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
+										'<div class="praise">'+
+											'<i class="fa fa-thumbs-o-up"></i>'+
+										'</div>';
+							}
+						li.innerHTML = str;
+						table.append(li);
+					}
+				}else{
+					mui.toast(e.msg);
+				}
+			}, "json");
+			mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+		}, 1500);
+	}
+	
+	/**
+	 * 上拉加载具体业务实现
+	 */
+	function pullupRefresh() {
+		if(relay==0){
+			// 定时退出
+			$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
+				if(e.errCode !== '1001'){
+					// 跳转页面
+					
+				}
+			}, "json");
+			setTimeout(function() {
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //参数为true代表没有更多数据了。
+				if(p==pageCount){
+					mui.toast('没有更多数据了');
+				}else{
+					$.post('../../api/apps/service.php',{sid: sid,p: p, pn: pn}, function(e) {
+						if(e.errCode==='1001'){
+							p = e.currentPage; // 数据当前页
+							pageCount = e.pageCount; // 会所的技师总数
+							var serviceList = e.servicelist;
+							var table = document.querySelector('.mui-table-view');
+							for(var i = 0; i<serviceList.length; i++){
+								var li = document.createElement('li');
+								li.className = 'box-technician-infor';
+								var str = '<div class="technician-number">'+ serviceList[i].mid +'号</div>'+
+											'<div class="technician-name">'+ serviceList[i].nickname +'</div>'+
+											'<div class="technician-image">'+
+												'<img src="'+ serviceList[i].picurl +'" width="100%" height="100%"/>'+
+											'</div>'+
+											'<div class="praise-nums">最近<span data-mid="'+ serviceList[i].mid +'">';
+								var like = window.localStorage.getItem('like_'+serviceList[i].mid);
+								if (like != null && !isNaN(like)) {
+									str+=like+'</span>次</div>'+
+											'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
+											'<div class="praise">'+
+												'<i class="fa fa-thumbs-o-up"></i>'+
+											'</div>';
+								}
+								li.innerHTML = str;
+								table.appendChild(li);
+							}
+						}else{
+							mui.toast(e.msg);
+							
+						}
+					}, "json");
+				}
+			}, 1500);
+		}else{
+			mui.toast('分享后可查看更多技师！');
 		}
 	}
-});
-/**
- * 下拉刷新具体业务实现
- */
-function pulldownRefresh() {
 	
-	setTimeout(function() {
-		var table = document.body.querySelector('.mui-table-view');
-		var cells = document.body.querySelectorAll('.box-technician-infor');
-		for (var i = cells.length, len = i + 3; i < len; i++) {
-			var li = document.createElement('li');
-			li.className = 'box-technician-infor';
-//			li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
-			li.innerHTML = '<div class="technician-number">2401号</div>'+
-							'<div class="technician-name">牙糕</div>'+
-							'<div class="technician-image">'+
-								'<img src="../image/4.jpg" width="100%" height="100%"/>'+
-							'</div>'+
-							'<div class="praise-nums">最近<span>623</span>次</div>'+
-							'<div class="technician-optimum">中医推拿、精油开背</div>'+
-							'<div class="praise">'+
-								'<i class="fa fa-thumbs-o-up"></i>'+
-							'</div>';
-			//下拉刷新，新纪录插到最前面；
-			table.insertBefore(li, table.firstChild);
-		}
-		mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
-	}, 1500);
-}
-var count = 0;
-/**
- * 上拉加载具体业务实现
- */
-function pullupRefresh() {
-	setTimeout(function() {
-		mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //参数为true代表没有更多数据了。
-		var table = document.body.querySelector('.mui-table-view');
-		var cells = document.body.querySelectorAll('.box-technician-infor');
-		for (var i = cells.length, len = i + 10; i < len; i++) {
-			var li = document.createElement('li');
-			li.className = 'box-technician-infor';
-			li.innerHTML = '<div class="technician-number">2401号</div>'+
-							'<div class="technician-name">牙糕</div>'+
-							'<div class="technician-image">'+
-								'<img src="../image/4.jpg" width="100%" height="100%"/>'+
-							'</div>'+
-							'<div class="praise-nums">最近<span>623</span>次</div>'+
-							'<div class="technician-optimum">中医推拿、精油开背</div>'+
-							'<div class="praise">'+
-								'<i class="fa fa-thumbs-o-up"></i>'+
-							'</div>';
-			table.appendChild(li);
-		}
-	}, 1500);
-}
+});
+
+
+
 //if (mui.os.plus) {
 //	mui.plusReady(function() {
 //		setTimeout(function() {
