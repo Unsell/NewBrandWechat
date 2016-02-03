@@ -9,8 +9,8 @@ $signPackage = $jssdk->GetSignPackage();
 	<head>
 		<meta charset="UTF-8">
 		<meta name="title" content="觅技 - 选择谁服务您，这本来就是您的权利" /> 
- 	  <meta name="keywords" content="挑选技师，水疗SPA" /> 
-  	<meta name="description" content="选择谁服务您，这本来就是您的权利" />
+ 	    <meta name="keywords" content="挑选技师，水疗SPA" /> 
+  		<meta name="description" content="选择谁服务您，这本来就是您的权利" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">	
 		<meta name="viewport" content="target-densitydpi=device-dpi, width=640,user-scalable=no" />
 		<meta name="format-detection" content="telephone=no" />
@@ -23,7 +23,7 @@ $signPackage = $jssdk->GetSignPackage();
 	<body>
 		<div class="mui-content">
 			<div class="user-infor-header">
-				<a class="user-image" href="myCoupons.html">
+				<a class="user-image">
 					<img src="" width="100%" height="100%"/>
 				</a>
 				<div class="user-coupons">

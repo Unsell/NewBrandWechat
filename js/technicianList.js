@@ -15,13 +15,15 @@ $(function(){
 		//technicianList;  //存储技师列表
 	
 	
-	var isRelay = window.localStorage.getItem('relay');
-	var relayTime = window.localStorage.getItem('relayTime');
+	var isRelay = window.localStorage.getItem('relay'); // 全局配置参数，代表权限，1为转发后能看，0为不限制
+	var relayTime = window.localStorage.getItem('relayTime');  // 这个是用在判断24小时自动退出的
 	var sid = '625651511454314015876f4fd0c7d5801543716ab20a8b4b33',//getrequest('sid'),
 		openid = 'oDhcauLqRsII1wdnIxRGt7ChR798',//getrequest('openid'),
 		requestTime = 1454385206,//getrequest('t'),
 		requestTkey = '624542387633624f76453669765651511454385206c4a6ae28c73a2bf4332cdfe0ffb6eabd';//getrequest('tkey');
 	
+	window.localStorage.setItem('sidLoca', sid);
+		
 	// 获取全局配置
 	if (isRelay != null && (isRelay == '1' || isRelay == '0') && relayTime != '' && relayTime.length == 10) {
 		//判断relayTime与现在时间差是否超过24小时
@@ -54,7 +56,8 @@ $(function(){
 	// 获取用户信息
 	$.post('../../api/apps/getinfo.php',{openid: openid}, function(e) {
 		if(e.errCode==='1001'){
-			window.localStorage.setItem('userInfor', e);
+			var jsonList = JSON.stringify(e);  // 强制转换成json格式
+			window.localStorage.setItem('userInfor', jsonList); // 这里这样直接存储可能会出现问题。。。在卡劵页要用到用户的头像，到时验证
 			$('.user-image').find('img').attr('src',e.headimgurl);
 		}else{
 			mui.toast(e.msg);
@@ -64,8 +67,11 @@ $(function(){
 	// 获取代金券列表
 	$.post('../../api/apps/coupon.php',{openid: openid}, function(e) {
 		if(e.errCode==='1001'){
-			window.localStorage.setItem('couponList', e.couponList);
-			$('.coupons-nums').html(e.couponList.length);
+			var couponList = e.couponList;
+			var jsonList = JSON.stringify(couponList);  // 强制转换成json格式
+			// 加个判断，排除掉已过期的卡劵，以及区分开可用和暂不可用的卡劵，并分别存储
+			$('.coupons-nums').html(couponList.length); //??重写
+			window.localStorage.setItem('couponList', jsonList);  //??重写
 		}else{
 			mui.toast(e.msg);
 		}
@@ -113,7 +119,16 @@ $(function(){
 		}
 	}, "json");
 	
-	
+	// 跳转到绑定页或卡劵页
+	$('.user-infor-header').on('tap', '.user-image',function(){
+		var userInfor = window.localStorage.getItem('userInfor');
+		userInfor = JSON.parse(userInfor);// 字符串转换为josn数据
+		if(userInfor.phone==0){
+			window.location.href = "http://new.29mins.com/weixin/page/validate.php?sid="+sid+'&openid='+openid+'&t='+requestTime+'&tkey='+requestTkey;
+		}else{
+			window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?sid="+sid+'&openid='+openid+'&t='+requestTime+'&tkey='+requestTkey;
+		}
+	});
 	
 	// 点赞动画
 	$(document).on('tap','i',function(){

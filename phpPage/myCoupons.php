@@ -82,26 +82,10 @@ $signPackage = $jssdk->GetSignPackage();
 				</div>
 			</div>
 		</div>
-		<!--弹窗-验证-->
-		<div class="mui-backdrop popup-validate">
-			<div class="box-validate">
-				<div class="popup-header">
-					<div class="popup-header-sign"></div>
-					<div class="popup-header-title">验证</div>
-					<div class="popup-close"><span class="mui-icon mui-icon-closeempty"></div>
-				</div>
-				<div class="popup-content">
-					<form action="" method="">
-						<input class="phone" type="tel" name="" id="" value="" placeholder="请输入您的手机号码" />
-						<input class="verification-code" type="text" name="" id="" value="" placeholder="请输入您的验证码" />
-						<input class="obtain-code" type="button" name="" id="" value="获取验证码" />
-						<input class="submit" type="submit" value="完成验证并领取代金券"/>
-					</form>
-				</div>
-			</div>
-		</div>
+		
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/myCoupons.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var d = Date.now().toString();

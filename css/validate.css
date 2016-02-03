@@ -39,7 +39,7 @@
  	-moz-transform:translateX(-50%) rotate(45deg);
   	position: absolute;
   	top: -19px;
-  	left: 0;
+  	left: -1px;
 }
 .title .diamond div{
 	width: 100%;
@@ -52,9 +52,9 @@
 .content .phone{
 	width: 330px;
 	height: 60px;
-	font-size: 18px;
+	font-size: 19px;
 	color: #7F6C5B;
-	line-height: 60px;
+	line-height: 30px;
 	padding: 6px 0 6px 16px;
 	border: 2px solid #B6A896;
 	border-radius: 5px;
@@ -64,8 +64,8 @@
 	width: 210px;
 	height: 60px;
 	color: #7F6C5B;
-	font-size: 18px;
-	line-height: 60px;
+	font-size: 19px;
+	line-height: 30px;
 	padding: 6px 0 6px 16px;
 	border: 2px solid #B6A896;
 	border-bottom-left-radius: 5px;
@@ -76,7 +76,7 @@
 .content .obtain-code{
 	width: 115px;
 	height: 60px;
-	font-size: 18px;
+	font-size: 19px;
 	color: white;
 	font-weight: 700;
 	line-height: 60px;
@@ -90,19 +90,19 @@
 }
 input::-webkit-input-placeholder {
 	color: #9A9288 !important; 
-	font-size: 18px;
+	font-size: 19px;
 }
 input:-moz-placeholder {
 	color: #9A9288 !important; 
-	font-size: 18px;
+	font-size: 19px;
 }
 input::-moz-placeholder {
 	color: #9A9288 !important; 
-	font-size: 18px;
+	font-size: 19px;
 }
 input:-ms-input-placeholder {
 	color: #9A9288 !important; 
-	font-size: 18px;
+	font-size: 19px;
 }
 .content .submit{
 	width: 200px;
@@ -113,7 +113,7 @@ input:-ms-input-placeholder {
 	border-radius: 5px;
 	text-align: left;
 	padding-left: 20px;
-	font-size: 18px;
+	font-size: 19px;
 	font-weight: 700;
 	position: absolute;
 	left: 20px;

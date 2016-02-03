@@ -52,5 +52,9 @@ $signPackage = $jssdk->GetSignPackage();
 				</ol>
 			</div>
 		</div>
+		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/couponsDatailed.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>

@@ -1,7 +1,16 @@
+<?php
+require "/data/api/config/config.core.php";
+require_once "/data/api/class/jssdk.php";
+$jssdk = new JSSDK(appID, appsecret);
+$signPackage = $jssdk->GetSignPackage();
+?>
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
+		<meta charset="UTF-8">
+		<meta name="title" content="觅技 - 选择谁服务您，这本来就是您的权利" /> 
+ 	    <meta name="keywords" content="挑选技师，水疗SPA" /> 
+  		<meta name="description" content="选择谁服务您，这本来就是您的权利" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">	
 		<meta name="viewport" content="target-densitydpi=device-dpi, width=640,user-scalable=no" />
 		<meta name="format-detection" content="telephone=no" />
@@ -28,6 +37,7 @@
 		
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/validate.js" type="text/javascript" charset="utf-8"></script>
 
 	</body>
