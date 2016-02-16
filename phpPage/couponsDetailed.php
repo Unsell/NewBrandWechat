@@ -22,34 +22,50 @@ $signPackage = $jssdk->GetSignPackage();
 	<body>
 		<div class="mui-content">
 			<div class="coupons-header">
-				<div class="coupons-number"><span>1468 4523 6545</span></div>
+				<div class="coupons-number"><span></span></div>
 			</div>
 			<div class="coupons-detailed">
-				<div class="coupons-price">￥100</div>
+				<div class="coupons-price"></div>
 				<div class="box-time-infor">
 					<div class="time-infor-title">开始时间</div>
-					<div class="time-infor">2016/01/15/18:30</div>
+					<div class="time-infor begin-time"></div>
 				</div>
 				<div class="box-time-infor">
 					<div class="time-infor-title">开始时间</div>
-					<div class="time-infor">2016/01/15/18:30</div>
+					<div class="time-infor end-time"></div>
 				</div>
 				<div class="box-button">
 					<button class="btn-use" type="button">立即使用</button>
 					<button class="btn-share" type="button">送给朋友</button>
 				</div>
 			</div>
-			<a class="applicable-store" href="applicableStore.html">
+			<div class="applicable-store" href="applicableStore.html">
 				<span>适用门店</span>
 				<span class="mui-icon mui-icon-arrowright"></span>
-			</a>
+			</div>
 			<div class="use-rule">
 				<span>使用规则</span>
-				<ol>
-					<li>....水电费水电费水电费是........</li>
-					<li>...斯蒂芬斯蒂芬.............................................................</li>
-					<li>..水电费为儿童和人吧.......................................asdasdasd asddffd ddf a .</li>
-				</ol>
+				<ul>
+					
+				</ul>
+			</div>
+		</div>
+		<!--弹窗-验证-->
+		<div class="mui-backdrop popup-validate">
+			<div class="box-validate">
+				<div class="popup-header">
+					<div class="popup-header-sign"></div>
+					<div class="popup-header-title">验证</div>
+					<div class="popup-close">&#10005;</div>
+				</div>
+				<div class="popup-content">
+					<form action="" method="">
+						<input class="phone" type="tel" name="" id="" value="" placeholder="请输入您的手机号码" />
+						<input class="verification-code" type="text" name="" id="" value="" placeholder="请输入您的验证码" />
+						<input class="obtain-code" type="button" name="" id="" value="获取验证码" />
+						<input class="submit" type="submit" value="完成验证并领取代金券"/>
+					</form>
+				</div>
 			</div>
 		</div>
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>

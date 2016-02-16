@@ -6,23 +6,23 @@ $(function(){
 //	
 //	localStorage.setItem('try1',asd);
 
-	$('#pullrefresh').css('height',window.innerHeight-$('.mui-content').height());
+	$('#pullrefresh').css('height',window.innerHeight-$('.mui-content').height()-5);
 	
 	var relay, // 存储全局配置参数
 		userInfor,  // 存储用户信息
 		likeList,  // 存储技师点赞数
-		couponList;  // 存储用户代金券数组
+		canNotUseCouponList,  // 存储用户不可使用代金券数组
+		canUseCouponList;  // 存储用户可用代金券数组
 		//technicianList;  //存储技师列表
 	
 	
 	var isRelay = window.localStorage.getItem('relay'); // 全局配置参数，代表权限，1为转发后能看，0为不限制
 	var relayTime = window.localStorage.getItem('relayTime');  // 这个是用在判断24小时自动退出的
-	var sid = '625651511454314015876f4fd0c7d5801543716ab20a8b4b33',//getrequest('sid'),
+	var sid = '62565151145552059313445ded5716f814641cf612ec04ed6a',//getrequest('sid'),
 		openid = 'oDhcauLqRsII1wdnIxRGt7ChR798',//getrequest('openid'),
-		requestTime = 1454385206,//getrequest('t'),
-		requestTkey = '624542387633624f76453669765651511454385206c4a6ae28c73a2bf4332cdfe0ffb6eabd';//getrequest('tkey');
+		requestTime = 1455521651,//getrequest('tm'),
+		requestTkey = '6245423876454c6b62456e38624251511455521651631dc5744cb0424d673ccfd869561760';//getrequest('tkey');
 	
-	window.localStorage.setItem('sidLoca', sid);
 		
 	// 获取全局配置
 	if (isRelay != null && (isRelay == '1' || isRelay == '0') && relayTime != '' && relayTime.length == 10) {
@@ -49,13 +49,14 @@ $(function(){
 	$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
 		if(e.errCode !== '1001'){
 			// 跳转页面
-			
+			console.log('你已退出！');
 		}
 	}, "json");
 	
 	// 获取用户信息
 	$.post('../../api/apps/getinfo.php',{openid: openid}, function(e) {
 		if(e.errCode==='1001'){
+			//console.log(e.phone);
 			var jsonList = JSON.stringify(e);  // 强制转换成json格式
 			window.localStorage.setItem('userInfor', jsonList); // 这里这样直接存储可能会出现问题。。。在卡劵页要用到用户的头像，到时验证
 			$('.user-image').find('img').attr('src',e.headimgurl);
@@ -68,14 +69,43 @@ $(function(){
 	$.post('../../api/apps/coupon.php',{openid: openid}, function(e) {
 		if(e.errCode==='1001'){
 			var couponList = e.couponList;
-			var jsonList = JSON.stringify(couponList);  // 强制转换成json格式
+			
 			// 加个判断，排除掉已过期的卡劵，以及区分开可用和暂不可用的卡劵，并分别存储
-			$('.coupons-nums').html(couponList.length); //??重写
-			window.localStorage.setItem('couponList', jsonList);  //??重写
+			//if 判断。。。判断的依据？？对比现在的时间
+			var now = Date.now().toString().substring(0,10);
+			console.log(couponList[1].begin);
+			console.log(now);
+			var i,j=0,k=0,couponListNum=couponList.length;
+			var canUseCouponList=new Array();
+			var canNotUseCouponList=new Array();
+			for(i=0;i<couponList.length;i++){
+				console.log(couponList[i]);
+				if(couponList[i].begin && couponList[i].end && couponList[i].end<now){
+					couponListNum--;
+					continue;
+				}
+				else if(couponList[i].begin<now && couponList[i].end>now){
+					canUseCouponList[j] = JSON.stringify(couponList[i]); // 强制转换成json格式
+					j++;
+				}else if(couponList[i].begin>now){
+					canNotUseCouponList[k] = JSON.stringify(couponList[i]); // 强制转换成json格式
+					k++;
+				}
+			};
+			console.log(couponList.length);
+			console.log(couponListNum);
+			console.log(canUseCouponList);
+			console.log(canNotUseCouponList);
+			console.log(canNotUseCouponList[1]);
+			$('.coupons-nums').html(couponListNum);
+			window.localStorage.setItem('canUseCouponList', canUseCouponList);  //??重写
+			window.localStorage.setItem('canNotUseCouponList', canNotUseCouponList);  //??重写
 		}else{
 			mui.toast(e.msg);
 		}
 	}, "json");
+	
+	
 	
 	// 获取技师点赞列表
 	$.post('../../api/apps/like.php',{sid: sid}, function(e) {
@@ -103,14 +133,14 @@ $(function(){
 										'<img src="'+ serviceList[i].picurl +'" width="100%" height="100%"/>'+
 									'</div>'+
 									'<div class="praise-nums">最近<span data-mid="'+ serviceList[i].mid +'">';
-						var like = window.localStorage.getItem('like_'+serviceList[i].mid);
-						if (like != null && !isNaN(like)) {
-							str+=like+'</span>次</div>'+
-									'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
-									'<div class="praise">'+
-										'<i class="fa fa-thumbs-o-up"></i>'+
-									'</div>';
-						}
+					var like = window.localStorage.getItem('like_'+serviceList[i].mid);
+					if (like != null && !isNaN(like)) {
+						str+=like+'</span>次</div>'+
+								'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
+								'<div class="praise">'+
+									'<i class="fa fa-thumbs-o-up"></i>'+
+								'</div>';
+					}
 					li.innerHTML = str;
 				table.appendChild(li);
 			}
@@ -124,9 +154,9 @@ $(function(){
 		var userInfor = window.localStorage.getItem('userInfor');
 		userInfor = JSON.parse(userInfor);// 字符串转换为josn数据
 		if(userInfor.phone==0){
-			window.location.href = "http://new.29mins.com/weixin/page/validate.php?sid="+sid+'&openid='+openid+'&t='+requestTime+'&tkey='+requestTkey;
+			window.location.href = "http://new.29mins.com/weixin/page/validate.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
 		}else{
-			window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?sid="+sid+'&openid='+openid+'&t='+requestTime+'&tkey='+requestTkey;
+			window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
 		}
 	});
 	
@@ -263,14 +293,14 @@ $(function(){
 											'<img src="'+ serviceList[i].picurl +'" width="100%" height="100%"/>'+
 										'</div>'+
 										'<div class="praise-nums">最近<span data-mid="'+ serviceList[i].mid +'">';
-							var like = window.localStorage.getItem('like_'+serviceList[i].mid);
-							if (like != null && !isNaN(like)) {
-								str+=like+'</span>次</div>'+
-										'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
-										'<div class="praise">'+
-											'<i class="fa fa-thumbs-o-up"></i>'+
-										'</div>';
-							}
+						var like = window.localStorage.getItem('like_'+serviceList[i].mid);
+						if (like != null && !isNaN(like)) {
+							str+=like+'</span>次</div>'+
+									'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
+									'<div class="praise">'+
+										'<i class="fa fa-thumbs-o-up"></i>'+
+									'</div>';
+						}
 						li.innerHTML = str;
 						table.append(li);
 					}

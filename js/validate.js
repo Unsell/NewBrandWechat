@@ -4,9 +4,7 @@ $(function(){
 	var userInfor = window.localStorage.getItem('userInfor');
 	var userPhone;
 	var sid = getrequest('sid'),
-		openid = getrequest('openid'),
-		requestTime = getrequest('t'),
-		requestTkey = getrequest('tkey');
+		openid = getrequest('openid');
 	
 	// 获取验证码
 	$(document).on("tap", '#validate',function(){
@@ -62,10 +60,12 @@ $(function(){
 			if(e.errCode==='1001'){
 				mui.toast('验证成功');
 				// 跳转到卡劵页面
-				window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?sid="+sid+'&openid='+openid+'&t='+requestTime+'&tkey='+requestTkey;
 				
+				console.log(e);
 				userInfor.phone = phone;
+				console.log(userInfor);
 				window.localStorage.setItem('userInfor', userInfor); //? 当验证完成后，要更新前面缓存的数据，是否可以这样直接更新
+				window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?openid="+openid;
 			}else{
 				mui.toast(e.msg);
 			}
