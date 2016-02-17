@@ -14,6 +14,7 @@ $(function(){
 		canNotUseCouponList,  // 存储用户不可使用代金券数组
 		canUseCouponList;  // 存储用户可用代金券数组
 		//technicianList;  //存储技师列表
+	var nowTime;  // 存储后台服务器的现在的时间
 	
 	
 	var isRelay = window.localStorage.getItem('relay'); // 全局配置参数，代表权限，1为转发后能看，0为不限制
@@ -53,6 +54,11 @@ $(function(){
 		}
 	}, "json");
 	
+	// 获取后台服务器的现在时间，用来判断代金券的过去时间
+	$.get('../../api/apps/gettime.php', null, function(e) {
+		nowTime = e.timestamp;
+	}, "json");
+	
 	// 获取用户信息
 	$.post('../../api/apps/getinfo.php',{openid: openid}, function(e) {
 		if(e.errCode==='1001'){
@@ -71,23 +77,23 @@ $(function(){
 			var couponList = e.couponList;
 			
 			// 加个判断，排除掉已过期的卡劵，以及区分开可用和暂不可用的卡劵，并分别存储
-			//if 判断。。。判断的依据？？对比现在的时间
-			var now = Date.now().toString().substring(0,10);
+			//if 判断。。。判断的依据？？对比现在的时间:nowTime
+			//var now = Date.now().toString().substring(0,10);
 			console.log(couponList[1].begin);
-			console.log(now);
+			console.log(nowTime);
 			var i,j=0,k=0,couponListNum=couponList.length;
 			var canUseCouponList=new Array();
 			var canNotUseCouponList=new Array();
 			for(i=0;i<couponList.length;i++){
 				console.log(couponList[i]);
-				if(couponList[i].begin && couponList[i].end && couponList[i].end<now){
+				if(couponList[i].begin && couponList[i].end && couponList[i].end<nowTime){
 					couponListNum--;
 					continue;
 				}
-				else if(couponList[i].begin<now && couponList[i].end>now){
+				else if(couponList[i].begin<nowTime && couponList[i].end>nowTime){
 					canUseCouponList[j] = JSON.stringify(couponList[i]); // 强制转换成json格式
 					j++;
-				}else if(couponList[i].begin>now){
+				}else if(couponList[i].begin>nowTime){
 					canNotUseCouponList[k] = JSON.stringify(couponList[i]); // 强制转换成json格式
 					k++;
 				}

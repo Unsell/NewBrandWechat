@@ -20,32 +20,9 @@ $signPackage = $jssdk->GetSignPackage();
 		<title>适合门店</title>
 	</head>
 	<body>
-		<div class="store-list">
-			<div class="list">
-				<div class="sign-dian"></div>
-				<div class="store-name">ONLY-SPA</div>
-				<div class="stroe-addr">深圳市罗湖区1111号A座</div>
-				<i class="fa fa-phone-square store-phone"></i>
-			</div>
-			<div class="list">
-				<div class="sign-dian"></div>
-				<div class="store-name">ONLY-SPA</div>
-				<div class="stroe-addr">深圳市罗湖区1111号A座</div>
-				<i class="fa fa-phone-square store-phone"></i>
-			</div>
-			<div class="list">
-				<div class="sign-dian"></div>
-				<div class="store-name">ONLY-SPA</div>
-				<div class="stroe-addr">深圳市罗湖区1111号A座</div>
-				<i class="fa fa-phone-square store-phone"></i>
-			</div>
-			<div class="list">
-				<div class="sign-dian"></div>
-				<div class="store-name">ONLY-SPA</div>
-				<div class="stroe-addr">深圳市罗湖区1111号A座</div>
-				<i class="fa fa-phone-square store-phone"></i>
-			</div>
-		</div>
+		<ul class="store-list">
+			
+		</ul>
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/applicableStore.js" type="text/javascript" charset="utf-8"></script>

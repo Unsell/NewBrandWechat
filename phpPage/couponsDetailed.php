@@ -39,7 +39,7 @@ $signPackage = $jssdk->GetSignPackage();
 					<button class="btn-share" type="button">送给朋友</button>
 				</div>
 			</div>
-			<div class="applicable-store" href="applicableStore.html">
+			<div class="applicable-store">
 				<span>适用门店</span>
 				<span class="mui-icon mui-icon-arrowright"></span>
 			</div>
@@ -56,14 +56,14 @@ $signPackage = $jssdk->GetSignPackage();
 				<div class="popup-header">
 					<div class="popup-header-sign"></div>
 					<div class="popup-header-title">验证</div>
-					<div class="popup-close">&#10005;</div>
+					<div class="popup-close"><span class="mui-icon mui-icon-closeempty"></span></div>
 				</div>
 				<div class="popup-content">
 					<form action="" method="">
 						<input class="phone" type="tel" name="" id="" value="" placeholder="请输入您的手机号码" />
 						<input class="verification-code" type="text" name="" id="" value="" placeholder="请输入您的验证码" />
-						<input class="obtain-code" type="button" name="" id="" value="获取验证码" />
-						<input class="submit" type="submit" value="完成验证并领取代金券"/>
+						<button class="obtain-code" type="button">获取验证码</button>
+						<input class="submit" type="button" value="完成验证并领取代金券"/>
 					</form>
 				</div>
 			</div>
