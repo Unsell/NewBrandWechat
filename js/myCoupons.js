@@ -35,7 +35,7 @@ $(function(){
 			if(e.errCode==='1001'){
 				//console.log(e.phone);
 				$('.user-image').find('img').attr('src',e.headimgurl);
-				if(e.phone!==0){
+				if(e.phone!=0){
 					$('.user-name').html(e.phone);
 				}
 				var jsonList = JSON.stringify(e);  // 强制转换成json格式
@@ -48,7 +48,7 @@ $(function(){
 	}else{
 		userInfor = JSON.parse(userInfor);
 		$('.user-image').find('img').attr('src',userInfor.headimgurl);
-		if(userInfor.phone!==0){
+		if(userInfor.phone!=0){
 			$('.user-name').html(userInfor.phone);
 		}
 	}

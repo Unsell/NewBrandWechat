@@ -64,6 +64,7 @@ $(function(){
 				console.log(e);
 				userInfor.phone = phone;
 				console.log(userInfor);
+				userInfor = JSON.stringify(userInfor);
 				window.localStorage.setItem('userInfor', userInfor); //? 当验证完成后，要更新前面缓存的数据，是否可以这样直接更新
 				window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?openid="+openid;
 			}else{

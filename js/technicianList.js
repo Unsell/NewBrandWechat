@@ -19,25 +19,28 @@ $(function(){
 	
 	var isRelay = window.localStorage.getItem('relay'); // 全局配置参数，代表权限，1为转发后能看，0为不限制
 	var relayTime = window.localStorage.getItem('relayTime');  // 这个是用在判断24小时自动退出的
-	var sid = '62565151145552059313445ded5716f814641cf612ec04ed6a',//getrequest('sid'),
-		openid = 'oDhcauLqRsII1wdnIxRGt7ChR798',//getrequest('openid'),
-		requestTime = 1455521651,//getrequest('tm'),
-		requestTkey = '6245423876454c6b62456e38624251511455521651631dc5744cb0424d673ccfd869561760';//getrequest('tkey');
+	var sid = getrequest('sid'),
+		openid = getrequest('openid'),
+		requestTime = getrequest('tm'),
+		requestTkey = getrequest('tkey');
 	
 		
 	// 获取全局配置
 	if (isRelay != null && (isRelay == '1' || isRelay == '0') && relayTime != '' && relayTime.length == 10) {
 		//判断relayTime与现在时间差是否超过24小时
 		var nowTime = Date.now().toString().substring(0,10);
-		var min = nowTime-relayTime;//时间差
+		console.log(nowTime);
+		var min = parseInt(nowTime)-parseInt(relayTime);//时间差
 		if (min >= 86400) {
 			window.localStorage.setItem('relay', '1');
 			window.localStorage.setItem('relayTime', '');
 		}
 	} else {
 		$.post('../../api/apps/config.php',{sid: sid}, function(e) {
-			if(e.errcode==='1001'){
+			if(e.errCode==='1001'){
 				var now = Date.now().toString().substring(0,10);
+				console.log(now);
+				console.log(e.relay);
 				window.localStorage.setItem('relay',e.relay);
 				window.localStorage.setItem('relayTime', now);
 			}else{
@@ -55,9 +58,16 @@ $(function(){
 	}, "json");
 	
 	// 获取后台服务器的现在时间，用来判断代金券的过去时间
-	$.get('../../api/apps/gettime.php', null, function(e) {
-		nowTime = e.timestamp;
-	}, "json");
+	$.ajax({  
+         type : "get",  
+          url : "../../api/apps/gettime.php",  
+          data : null,  
+          async : false, 
+          dataType: 'json',
+          success : function(e){
+			nowTime = e.timestamp;
+          }  
+     });
 	
 	// 获取用户信息
 	$.post('../../api/apps/getinfo.php',{openid: openid}, function(e) {
@@ -79,13 +89,13 @@ $(function(){
 			// 加个判断，排除掉已过期的卡劵，以及区分开可用和暂不可用的卡劵，并分别存储
 			//if 判断。。。判断的依据？？对比现在的时间:nowTime
 			//var now = Date.now().toString().substring(0,10);
-			console.log(couponList[1].begin);
-			console.log(nowTime);
+			//console.log(couponList[1].begin);
+			//console.log(nowTime);
 			var i,j=0,k=0,couponListNum=couponList.length;
 			var canUseCouponList=new Array();
 			var canNotUseCouponList=new Array();
 			for(i=0;i<couponList.length;i++){
-				console.log(couponList[i]);
+				//console.log(couponList[i]);
 				if(couponList[i].begin && couponList[i].end && couponList[i].end<nowTime){
 					couponListNum--;
 					continue;
@@ -98,11 +108,11 @@ $(function(){
 					k++;
 				}
 			};
-			console.log(couponList.length);
-			console.log(couponListNum);
-			console.log(canUseCouponList);
-			console.log(canNotUseCouponList);
-			console.log(canNotUseCouponList[1]);
+			//console.log(couponList.length);
+			//console.log(couponListNum);
+			//console.log(canUseCouponList);
+			//console.log(canNotUseCouponList);
+			//console.log(canNotUseCouponList[1]);
 			$('.coupons-nums').html(couponListNum);
 			window.localStorage.setItem('canUseCouponList', canUseCouponList);  //??重写
 			window.localStorage.setItem('canNotUseCouponList', canNotUseCouponList);  //??重写
@@ -113,21 +123,46 @@ $(function(){
 	
 	
 	
-	// 获取技师点赞列表
-	$.post('../../api/apps/like.php',{sid: sid}, function(e) {
-		if(e.errCode==='1001'){
-			window.localStorage.setItem('likeList', e.like);
-		}else{
-			mui.toast(e.msg);
-		}
-	}, "json");
+	// 获取技师点赞列表 ///这里用post有时做不到同步请求，有时数据还没来，下面对技师列表的渲染就已经开始了，以至于技师的点赞数据是没有的。。
+//	$.post('../../api/apps/like.php',{sid: sid}, function(e) {
+//		if(e.errCode==='1001'){
+//			var likeList = e.like;
+//			for (var i = 0; i < likeList.length; i++) {
+//				window.localStorage.setItem('like_'+likeList[i].mid, likeList[i].like);
+//			}
+//				
+//		}else{
+//			mui.toast(e.msg);
+//		}
+//	}, "json");
+	$.ajax({  
+         type : "post",  
+          url : "../../api/apps/like.php",  
+          data : {sid: sid},  
+          async : false, 
+          dataType: 'json',
+          success : function(e){
+			if(e.errCode==='1001'){
+				var likeList = e.like;
+				for (var i = 0; i < likeList.length; i++) {
+					window.localStorage.setItem('like_'+likeList[i].mid, likeList[i].like);
+				}
+					
+			}else{
+				mui.toast(e.msg);
+			}
+          }  
+     });
+	
 	
 	// 获取技师列表
 	var pn=10,p=1,pageCount = 0;
 	$.post('../../api/apps/service.php',{sid: sid, pn: pn}, function(e) {
 		if(e.errCode==='1001'){
 			p = e.currentPage; // 数据当前页
-			pageCount = e.pageCount; // 会所的技师总数
+			pageCount = e.pageCount; // 会所的技师的页数
+			//console.log(p);
+			//console.log(pageCount);
 			var serviceList = e.servicelist;
 			var table = document.body.querySelector('.mui-table-view');
 			for(var i = 0; i<serviceList.length; i++){
@@ -142,11 +177,11 @@ $(function(){
 					var like = window.localStorage.getItem('like_'+serviceList[i].mid);
 					if (like != null && !isNaN(like)) {
 						str+=like+'</span>次</div>'+
-								'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
-								'<div class="praise">'+
-									'<i class="fa fa-thumbs-o-up"></i>'+
-								'</div>';
+								'<div class="technician-optimum">'+ serviceList[i].desc +'</div>';
 					}
+					str+='<div class="praise">'+
+						'<i class="fa fa-thumbs-o-up"></i>'+
+					'</div>';
 					li.innerHTML = str;
 				table.appendChild(li);
 			}
@@ -269,18 +304,36 @@ $(function(){
 			}
 		}, "json");
 		// 获取技师点赞列表
-		$.post('../../api/apps/like.php',{sid: sid}, function(e) {
-			if(e.errCode==='1001'){
-				var likeList = e.like;
-				for (var i = 0; i < likeList.length; i++) {
-					window.localStorage.setItem('like_'+likeList[i].mid, likeList[i].like);
+//		$.post('../../api/apps/like.php',{sid: sid}, function(e) {
+//			if(e.errCode==='1001'){
+//				var likeList = e.like;
+//				for (var i = 0; i < likeList.length; i++) {
+//					window.localStorage.setItem('like_'+likeList[i].mid, likeList[i].like);
+//				}
+//				
+//				
+//			}else{
+//				mui.toast(e.msg);
+//			}
+//		}, "json");
+		$.ajax({  
+	         type : "post",  
+	          url : "../../api/apps/like.php",  
+	          data : {sid: sid},  
+	          async : false, 
+	          dataType: 'json',
+	          success : function(e){
+				if(e.errCode==='1001'){
+					var likeList = e.like;
+					for (var i = 0; i < likeList.length; i++) {
+						window.localStorage.setItem('like_'+likeList[i].mid, likeList[i].like);
+					}
+						
+				}else{
+					mui.toast(e.msg);
 				}
-				
-				
-			}else{
-				mui.toast(e.msg);
-			}
-		}, "json");
+	          }  
+	     });
 		setTimeout(function() {
 			$.post('../../api/apps/service.php',{sid: sid,p: 1, pn: pn}, function(e) {
 				if(e.errCode==='1001'){
@@ -302,11 +355,11 @@ $(function(){
 						var like = window.localStorage.getItem('like_'+serviceList[i].mid);
 						if (like != null && !isNaN(like)) {
 							str+=like+'</span>次</div>'+
-									'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
-									'<div class="praise">'+
-										'<i class="fa fa-thumbs-o-up"></i>'+
-									'</div>';
+									'<div class="technician-optimum">'+ serviceList[i].desc +'</div>';
 						}
+						str+='<div class="praise">'+
+								'<i class="fa fa-thumbs-o-up"></i>'+
+							'</div>';
 						li.innerHTML = str;
 						table.append(li);
 					}
@@ -322,7 +375,7 @@ $(function(){
 	 * 上拉加载具体业务实现
 	 */
 	function pullupRefresh() {
-		if(relay==0){
+		if(isRelay==0){
 			// 定时退出
 			$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
 				if(e.errCode !== '1001'){
@@ -333,8 +386,11 @@ $(function(){
 			setTimeout(function() {
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //参数为true代表没有更多数据了。
 				if(p==pageCount){
+					//console.log(p);
+					//console.log(pageCount);
 					mui.toast('没有更多数据了');
 				}else{
+					p++;
 					$.post('../../api/apps/service.php',{sid: sid,p: p, pn: pn}, function(e) {
 						if(e.errCode==='1001'){
 							p = e.currentPage; // 数据当前页
@@ -353,11 +409,11 @@ $(function(){
 								var like = window.localStorage.getItem('like_'+serviceList[i].mid);
 								if (like != null && !isNaN(like)) {
 									str+=like+'</span>次</div>'+
-											'<div class="technician-optimum">'+ serviceList[i].desc +'</div>'+
-											'<div class="praise">'+
-												'<i class="fa fa-thumbs-o-up"></i>'+
-											'</div>';
+											'<div class="technician-optimum">'+ serviceList[i].desc +'</div>';
 								}
+								str+='<div class="praise">'+
+										'<i class="fa fa-thumbs-o-up"></i>'+
+									'</div>';
 								li.innerHTML = str;
 								table.appendChild(li);
 							}
@@ -370,6 +426,7 @@ $(function(){
 			}, 1500);
 		}else{
 			mui.toast('分享后可查看更多技师！');
+			mui('#pullrefresh').pullRefresh().endPullupToRefresh();
 		}
 	}
 	

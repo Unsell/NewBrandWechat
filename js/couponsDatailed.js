@@ -5,8 +5,8 @@ $(function(){
 	
 	var dataNums = getrequest('dataNums');
 	var notUse = getrequest('notUse');  // 区分点击的是哪种代金券，等于notUse的代表暂不可用代金券
-	var openid = getrequest('openid'),
-		sid;
+	var openid = getrequest('openid');
+	var snum;
 	
 	
 	var canNotUseCouponList,  // 存储用户不可使用代金券数组
@@ -24,7 +24,7 @@ $(function(){
 		var strNumber = ''+couponNumber.substring(0,4)+' '+couponNumber.substring(4,8)+' '+couponNumber.substring(8,12);// 代金券号码
 		$('.coupons-number').find('span').html(strNumber);
 		$('.coupons-price').html('￥'+couponInfor.money);
-		sid = couponInfor.sid;
+		snum = couponInfor.num;
 		// 开始时间
 		var beginTime = new Date(parseInt(couponInfor.begin) * 1000);
 		var strBeginTime = (beginTime.getFullYear()) + "/" + 
@@ -54,7 +54,7 @@ $(function(){
 		
 		var couponInfor = canUseCouponList[dataNums];
 		console.log(couponInfor);
-		sid = couponInfor.sid;
+		snum = couponInfor.num;
 		var couponNumber = couponInfor.num;
 		var strNumber = ''+couponNumber.substring(0,4)+' '+couponNumber.substring(4,8)+' '+couponNumber.substring(8,12);// 代金券号码
 		$('.coupons-number').find('span').html(strNumber);
@@ -88,6 +88,8 @@ $(function(){
 		console.log(userInfor.phone);
 		if(userInfor.phone==0){
 			$('.popup-validate').show();
+		}else{
+			scanQRCode(snum);
 		}
 	});
 	
@@ -154,8 +156,12 @@ $(function(){
 				console.log(e);
 				userInfor.phone = phone;
 				console.log(userInfor);
+				userInfor = JSON.stringify(userInfor);
 				window.localStorage.setItem('userInfor', userInfor); //? 当验证完成后，要更新前面缓存的数据，是否可以这样直接更新
-				window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?openid="+openid;
+				//window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?openid="+openid;
+				console.log(userInfor);
+				$('.popup-validate').hide();
+				scanQRCode(snum);
 			}else{
 				mui.toast(e.msg);
 			}
@@ -167,6 +173,35 @@ $(function(){
 		window.location.href = "http://new.29mins.com/weixin/page/applicableStore.php?dataNums="+dataNums+'&notUse='+notUse;
 	});
 	
+	// 调用扫描二维码接口
+	function scanQRCode(snum){
+		wx.scanQRCode({
+		    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+		    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+		    success: function (res) {
+		    	var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+		    	var sid = '';
+		    	if (result.indexOf('sid=') > -1) {
+		    		sid = result.split('sid=')[1];
+		    	}
+		    	
+//				alert(sid+'===='+openid+'===='+snum);
+				if (sid != '') {
+			    	$.post('../../api/apps/sale.php',{action: 'scan',sid: sid,snum: snum,openid: openid}, function(e) {
+						
+						if(e.errCode==='1001'){
+							alert(e.msg);
+							window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?openid="+openid+'&from=weixin';
+						}else{
+							mui.toast(e.msg);
+						}
+					}, "json"); 
+				} else {
+					mui.toast('非法入口');
+				}
+			}
+		});
+	}
 
 });
 
