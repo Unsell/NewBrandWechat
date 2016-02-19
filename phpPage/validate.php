@@ -1,4 +1,8 @@
 <?php
+if(!strpos($_SERVER["HTTP_USER_AGENT"],"MicroMessenger")) {
+	die('请用微信浏览器打开');
+}
+
 require "/data/api/config/config.core.php";
 require_once "/data/api/class/jssdk.php";
 $jssdk = new JSSDK(appID, appsecret);
@@ -30,11 +34,15 @@ $signPackage = $jssdk->GetSignPackage();
 					<input class="phone" type="number" name="" id="" value="" placeholder="请输入您的手机号码" />
 					<input class="verification-code" type="number" name="" id="" value="" placeholder="请输入您的验证码" />
 					<button id="validate" class="obtain-code" type="button">获取验证码</button>
-					<input id="submit" class="submit" type="button" value="确认"/>
+					<button id="submit" class="submit" type="button">确认</button>
 				</form>
 			</div>
 		</div>
-		
+		<div class="vice-nav clearfix">
+			<a class="nav-back" href="">返回</a>
+			<a class="nav-coupons" href="">我的卡劵</a>
+			<a class="nav-techlist" href="">技师列表</a>
+		</div>
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
@@ -62,7 +70,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				        // 用户确认分享后执行的回调函数
 				        window.localStorage.setItem('relay', '0');
-				        
+				        window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -80,6 +88,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				        // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -95,6 +104,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				       // 用户取消分享后执行的回调函数
@@ -109,6 +119,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -123,6 +134,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数

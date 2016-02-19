@@ -24,7 +24,7 @@ $(function(){
 		requestTime = getrequest('tm'),
 		requestTkey = getrequest('tkey');
 	
-		
+	$('.vice-nav').show();	
 	// 获取全局配置
 	if (isRelay != null && (isRelay == '1' || isRelay == '0') && relayTime != '' && relayTime.length == 10) {
 		//判断relayTime与现在时间差是否超过24小时
@@ -54,6 +54,7 @@ $(function(){
 		if(e.errCode !== '1001'){
 			// 跳转页面
 			console.log('你已退出！');
+			window.location.href = "http://www.baidu.com";
 		}
 	}, "json");
 	
@@ -107,7 +108,7 @@ $(function(){
 					canNotUseCouponList[k] = JSON.stringify(couponList[i]); // 强制转换成json格式
 					k++;
 				}
-			};
+			}
 			//console.log(couponList.length);
 			//console.log(couponListNum);
 			//console.log(canUseCouponList);
@@ -116,8 +117,11 @@ $(function(){
 			$('.coupons-nums').html(couponListNum);
 			window.localStorage.setItem('canUseCouponList', canUseCouponList);  //??重写
 			window.localStorage.setItem('canNotUseCouponList', canNotUseCouponList);  //??重写
-		}else{
-			mui.toast(e.msg);
+		} else {
+			$('.coupons-nums').html('0');
+			window.localStorage.setItem('canUseCouponList', null);
+			window.localStorage.setItem('canNotUseCouponList', null); 
+			//mui.toast(e.msg);
 		}
 	}, "json");
 	
@@ -167,23 +171,31 @@ $(function(){
 			var table = document.body.querySelector('.mui-table-view');
 			for(var i = 0; i<serviceList.length; i++){
 				var li = document.createElement('li');
-					li.className = 'box-technician-infor';
-					var str = '<div class="technician-number">'+ serviceList[i].mid +'号</div>'+
-									'<div class="technician-name">'+ serviceList[i].nickname +'</div>'+
-									'<div class="technician-image">'+
-										'<img src="'+ serviceList[i].picurl +'" width="100%" height="100%"/>'+
-									'</div>'+
-									'<div class="praise-nums">最近<span data-mid="'+ serviceList[i].mid +'">';
-					var like = window.localStorage.getItem('like_'+serviceList[i].mid);
-					if (like != null && !isNaN(like)) {
-						str+=like+'</span>次</div>'+
-								'<div class="technician-optimum">'+ serviceList[i].desc +'</div>';
-					}
-					str+='<div class="praise">'+
-						'<i class="fa fa-thumbs-o-up"></i>'+
-					'</div>';
-					li.innerHTML = str;
+				li.className = 'box-technician-infor';
+				var str = '<div class="technician-number">'+ serviceList[i].mid +'号</div>'+
+								'<div class="technician-name">'+ serviceList[i].nickname +'</div>'+
+								'<div class="technician-image">'+
+									'<img src="'+ serviceList[i].picurl +'" width="100%" height="100%"/>'+
+								'</div>'+
+								'<div class="praise-nums">最近<span data-mid="'+ serviceList[i].mid +'">';
+				var like = window.localStorage.getItem('like_'+serviceList[i].mid);
+				if (like != null && !isNaN(like)) {
+					str+=like+'</span>次</div>'+
+							'<div class="technician-optimum">'+ serviceList[i].desc +'</div>';
+				}
+				str+='<div class="praise">'+
+					'<i class="fa fa-thumbs-o-up"></i>'+
+				'</div>';
+				li.innerHTML = str;
 				table.appendChild(li);
+			}
+			if(pn<e.count){
+				var div = document.createElement('div');
+				div.className = 'mui-pull tip-marginleft';
+				var strTip = '<div class="mui-icon mui-icon-pulldown"></div>'+
+							'<div class="mui-pull-caption">还有更多哦！</div>';
+				div.innerHTML = strTip;
+				table.appendChild(div);
 			}
 		}else{
 			mui.toast(e.msg);
@@ -192,6 +204,12 @@ $(function(){
 	
 	// 跳转到绑定页或卡劵页
 	$('.user-infor-header').on('tap', '.user-image',function(){
+		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
+			if(e.errCode !== '1001'){
+				// 跳转页面
+				window.location.href = "http://www.baidu.com";
+			}
+		}, "json");
 		var userInfor = window.localStorage.getItem('userInfor');
 		userInfor = JSON.parse(userInfor);// 字符串转换为josn数据
 		if(userInfor.phone==0){
@@ -207,7 +225,7 @@ $(function(){
 		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
 			if(e.errCode !== '1001'){
 				// 跳转页面
-				
+				window.location.href = "http://www.baidu.com";
 			}
 		}, "json");
 		if($(this).hasClass('fa-thumbs-o-up')){
@@ -241,7 +259,7 @@ $(function(){
 		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
 			if(e.errCode !== '1001'){
 				// 跳转页面
-				
+				window.location.href = "http://www.baidu.com";
 			}
 		}, "json");
 		mui('#boxWifiInfor').popover('toggle');
@@ -267,16 +285,12 @@ $(function(){
 		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
 			if(e.errCode !== '1001'){
 				// 跳转页面
-				
+				window.location.href = "http://www.baidu.com";
 			}
 		}, "json");
 		mui('#boxWifiInfor').popover('toggle');
 		$('.wifi-list').children().remove();
 	});
-	
-	
-	
-	
 	
 	mui.init({
 		pullRefresh: {
@@ -300,7 +314,7 @@ $(function(){
 		$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
 			if(e.errCode !== '1001'){
 				// 跳转页面
-				
+				window.location.href = "http://www.baidu.com";
 			}
 		}, "json");
 		// 获取技师点赞列表
@@ -363,6 +377,14 @@ $(function(){
 						li.innerHTML = str;
 						table.append(li);
 					}
+					if(pn<e.count){
+						var div = document.createElement('div');
+						div.className = 'mui-pull tip-marginleft';
+						var strTip = '<div class="mui-icon mui-icon-pulldown"></div>'+
+									'<div class="mui-pull-caption">还有更多哦！</div>';
+						div.innerHTML = strTip;
+						table.appendChild(div);
+					}
 				}else{
 					mui.toast(e.msg);
 				}
@@ -380,7 +402,7 @@ $(function(){
 			$.post('../../api/apps/exit.php',{tm: requestTime,tkey: requestTkey}, function(e) {
 				if(e.errCode !== '1001'){
 					// 跳转页面
-					
+					window.location.href = "http://www.baidu.com";
 				}
 			}, "json");
 			setTimeout(function() {
@@ -391,6 +413,7 @@ $(function(){
 					mui.toast('没有更多数据了');
 				}else{
 					p++;
+					$('.tip-marginleft').hide();
 					$.post('../../api/apps/service.php',{sid: sid,p: p, pn: pn}, function(e) {
 						if(e.errCode==='1001'){
 							p = e.currentPage; // 数据当前页
@@ -430,22 +453,25 @@ $(function(){
 		}
 	}
 	
+	// 底部副导航栏的页面跳转
+	// 返回
+	$('.vice-nav').on('tap', '.nav-back',function(){
+		window.location.reload();
+//		window.location.replace(document.referrer); //返回并刷新页面;document.referrer :前一个页面的URL
+	});
+	// 我的卡劵
+	$('.vice-nav').on('tap', '.nav-coupons',function(){
+		window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
+	});
+	// 技师列表
+	$('.vice-nav').on('tap', '.nav-techlist',function(){
+		window.location.reload();
+		//window.location.href = "http://new.29mins.com/weixin/page/technicianList.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
+	});
 });
 
 
 
-//if (mui.os.plus) {
-//	mui.plusReady(function() {
-//		setTimeout(function() {
-//			mui('#pullrefresh').pullRefresh().pullupLoading();
-//		}, 1000);
-//
-//	});
-//} else {
-//	mui.ready(function() {
-//		mui('#pullrefresh').pullRefresh().pullupLoading();
-//	});
-//}
 
 
 

@@ -1,4 +1,8 @@
 <?php
+if(!strpos($_SERVER["HTTP_USER_AGENT"],"MicroMessenger")) {
+	die('请用微信浏览器打开');
+}
+
 require "/data/api/config/config.core.php";
 require_once "/data/api/class/jssdk.php";
 $jssdk = new JSSDK(appID, appsecret);
@@ -68,6 +72,11 @@ $signPackage = $jssdk->GetSignPackage();
 				</div>
 			</div>
 		</div>
+		<div class="vice-nav clearfix">
+			<a class="nav-back" >返回</a>
+			<a class="nav-coupons">我的卡劵</a>
+			<a class="nav-techlist" >技师列表</a>
+		</div>
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
@@ -94,7 +103,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				        // 用户确认分享后执行的回调函数
 				        window.localStorage.setItem('relay', '0');
-				        
+				        window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -112,6 +121,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				        // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -127,6 +137,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				       // 用户取消分享后执行的回调函数
@@ -141,6 +152,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -155,18 +167,12 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
 				    }
 				});
-//				wx.scanQRCode({
-//				    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-//				    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-//				    success: function (res) {
-//				    	var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-//					}
-//				});
 			});
 		</script>
 		<script src="../js/couponsDatailed.js" type="text/javascript" charset="utf-8"></script>

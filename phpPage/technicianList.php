@@ -1,4 +1,8 @@
 <?php
+if(!strpos($_SERVER["HTTP_USER_AGENT"],"MicroMessenger")) {
+	die('请用微信浏览器打开');
+}
+
 require "/data/api/config/config.core.php";
 require_once "/data/api/class/jssdk.php";
 $jssdk = new JSSDK(appID, appsecret);
@@ -44,8 +48,12 @@ $signPackage = $jssdk->GetSignPackage();
 				<div class="mui-scroll">
 					<!--数据列表-->
 					<ul class="mui-table-view mui-table-view-chevron clearfix">
-						
+						<div class="mui-pull tip-marginleft">
+							<div class="mui-pull-loading mui-icon mui-icon-pulldown"></div>
+							<div class="mui-pull-caption">还有更多哦！</div>
+						</div>
 					</ul>
+					
 				</div>
 			</div>
 			<!--弹窗-WI-FI-->
@@ -56,7 +64,7 @@ $signPackage = $jssdk->GetSignPackage();
 							<img src="../image/4.jpg" width="100%" height="100%"/>
 							<div class="box-arrow-bottom"></div>
 						</div>
-						<div class="user-name">未验证</div>
+						<div class="user-name"></div>
 						<div class="diamond"><div></div></div>
 					</div>
 					<ol class="wifi-list">
@@ -70,9 +78,9 @@ $signPackage = $jssdk->GetSignPackage();
 			</div>
 		</div>
 		<div class="vice-nav clearfix">
-				<a class="nav-back" href="">返回</a>
-				<a class="nav-coupons" href="">我的卡劵</a>
-				<a class="nav-techlist" href="">技师列表</a>
+			<a class="nav-back" href="">返回</a>
+			<a class="nav-coupons" href="">我的卡劵</a>
+			<a class="nav-techlist" href="">技师列表</a>
 		</div>
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/mui.min.js"></script>
@@ -101,7 +109,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				        // 用户确认分享后执行的回调函数
 				        window.localStorage.setItem('relay', '0');
-				        
+				        window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -119,6 +127,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				        // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -134,6 +143,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				       // 用户取消分享后执行的回调函数
@@ -148,6 +158,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数
@@ -162,6 +173,7 @@ $signPackage = $jssdk->GetSignPackage();
 				    success: function () { 
 				       // 用户确认分享后执行的回调函数
 				       window.localStorage.setItem('relay', '0');
+				       window.location.reload();
 				    },
 				    cancel: function () { 
 				        // 用户取消分享后执行的回调函数

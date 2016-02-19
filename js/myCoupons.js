@@ -4,7 +4,10 @@
 $(function(){
 	
 	var userInfor = window.localStorage.getItem('userInfor');
-	var openid = getrequest('openid');
+	var sid = getrequest('sid'),
+		openid = getrequest('openid'),
+		requestTime = getrequest('tm'),
+		requestTkey = getrequest('tkey');
 	var from = getrequest('from');  // 区分进入这页面的途径
 	var canNotUseCouponList,  // 存储用户不可使用代金券数组
 		canUseCouponList;  // 存储用户可用代金券数组
@@ -29,7 +32,7 @@ $(function(){
 	 *  先判断用户是从哪个入口进入页面的，如果在url地址上有from这个参数，就代表是直接进来的，
 	 *  这是要重新请求一次couponList的数据，如果没有就可以直接读取前面缓存的couponList的数据显示
 	*/
-	if(!userInfor){  // 第一次进入，还没缓存信息时
+	if(userInfor==null || userInfor.length <= 4){  // 第一次进入，还没缓存信息时
 		// 获取用户信息
 		$.post('../../api/apps/getinfo.php',{openid: openid}, function(e) {
 			if(e.errCode==='1001'){
@@ -53,9 +56,12 @@ $(function(){
 		}
 	}
 	
-	
+	if(from !== 'weixin'){
+		$('.vice-nav').show();
+	}
 	// 如果是直接进入这页面且已验证过，就要重新请求一次技师卡劵页；
 	if(from === 'weixin'){
+		
 		// 获取代金券列表
 		$.post('../../api/apps/coupon.php',{openid: openid}, function(e) {
 			if(e.errCode==='1001'){
@@ -65,7 +71,7 @@ $(function(){
 				//if 判断。。。判断的依据？？对比现在的时间nowTime
 				//var now = Date.now().toString().substring(0,10);
 
-				console.log(nowTime);
+//				console.log(nowTime);
 				var i,j=0,k=0,couponListNum=couponList.length;
 				var canUseCouponList=new Array();
 				var canNotUseCouponList=new Array();
@@ -83,14 +89,18 @@ $(function(){
 						k++;
 					}
 				}
-				console.log(couponList.length);
-				console.log(couponListNum);
+				//console.log(couponList.length);
+				//console.log(couponListNum);
 				$('.coupons-number').find('span').html(couponListNum);
+				
 				window.localStorage.setItem('canUseCouponList', canUseCouponList);  //??重写
 				window.localStorage.setItem('canNotUseCouponList', canNotUseCouponList);  //??重写
 				showCoupon();
 			}else{
-				mui.toast(e.msg);
+				$('.coupons-number').find('span').html("0");
+				window.localStorage.setItem('canUseCouponList', null);
+				window.localStorage.setItem('canNotUseCouponList', null); 
+				//mui.toast(e.msg);
 			}
 		}, "json");
 	}else{
@@ -101,12 +111,20 @@ $(function(){
 	function showCoupon(){
 		canNotUseCouponList = window.localStorage.getItem('canNotUseCouponList');  // 获得用户不可使用代金券数组
 		canUseCouponList = window.localStorage.getItem('canUseCouponList');  // 获得用户可用代金券数组
-		
-		canNotUseCouponList = eval('['+canNotUseCouponList+']');  // 把数据转换成JSON格式 ,加大括号表示处理对象是个数组
-		canUseCouponList = eval('['+canUseCouponList+']');   // 把数据转换成JSON格式
-	//	alert(canUseCouponList);
-	//	alert(canNotUseCouponList);
+
+		if ((canNotUseCouponList != null && canNotUseCouponList.length > 4) || (canUseCouponList != null && canUseCouponList.length > 4)) {
+			canNotUseCouponList = eval('['+canNotUseCouponList+']');  // 把数据转换成JSON格式 ,加大括号表示处理对象是个数组
+			canUseCouponList = eval('['+canUseCouponList+']');   // 把数据转换成JSON格式
+		} else {
+			$('.coupons-number').find('span').html("0");
+			canNotUseCouponList = null;
+			canUseCouponList = null;
+			return;
+		}
+
 		$('.coupons-number').find('span').html(canUseCouponList.length+canNotUseCouponList.length);
+
+		
 		var ulContent = document.body.querySelector('.box-coupons');
 	//	var now = Date.now().toString().substring(0,10); // 现在的时间戳。。
 		
@@ -184,7 +202,7 @@ $(function(){
 	$('.box-coupons').on('tap','.box-coupons-can-use',function(){
 		
 		var dataNums = $(this).attr('data-nums');
-		window.location.href = "http://new.29mins.com/weixin/page/couponsDetailed.php?dataNums="+dataNums+"&openid="+openid;
+		window.location.href = "http://new.29mins.com/weixin/page/couponsDetailed.php?dataNums="+dataNums+"&openid="+openid+"&from="+from+'&sid='+sid+'&tm='+requestTime+'&tkey='+requestTkey;
 		
 	});
 	
@@ -193,21 +211,24 @@ $(function(){
 		
 		var dataNums = $(this).attr('data-nums');
 		var notUse = 'notUse'
-		window.location.href = "http://new.29mins.com/weixin/page/couponsDetailed.php?dataNums="+dataNums+'&notUse='+notUse+"&openid="+openid;
+		window.location.href = "http://new.29mins.com/weixin/page/couponsDetailed.php?dataNums="+dataNums+'&notUse='+notUse+"&openid="+openid+"&from="+from+'&sid='+sid+'&tm='+requestTime+'&tkey='+requestTkey;
 		
 	});
-	// 取数据
-//	var canUseCouponList = window.localStorage.getItem('canUseCouponList');
-//	var a = JSON.parse(canUseCouponList);
-//	a[0].num = 
-//	console.log(canUseCouponList[0].num); 这样是不行的！！
-	
-//	var couponList = window.localStorage.getItem('couponList');
-//	//var jsonp = eval(co);  // 字符串转换为josn数据
-//	//alert(jsonp[0].num);
-//	couponList = JSON.parse(couponList);// 字符串转换为josn数据
-//	var nowTime = new Date.now().toString().substring(0,10);
-//	for(var i=0; i<couponList.length)
+	// 底部副导航栏的页面跳转
+	// 返回
+	$('.vice-nav').on('tap', '.nav-back',function(){
+//		window.location.reload();
+		window.location.replace(document.referrer); //返回并刷新页面;document.referrer :前一个页面的URL
+	});
+	// 我的卡劵
+	$('.vice-nav').on('tap', '.nav-coupons',function(){
+		window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
+	});
+	// 技师列表
+	$('.vice-nav').on('tap', '.nav-techlist',function(){
+//		window.location.reload();
+		window.location.href = "http://new.29mins.com/weixin/page/technicianList.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
+	});
 	
 });
 

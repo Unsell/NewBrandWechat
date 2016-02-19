@@ -5,12 +5,20 @@ $(function(){
 	
 	var dataNums = getrequest('dataNums');
 	var notUse = getrequest('notUse');  // 区分点击的是哪种代金券，等于notUse的代表暂不可用代金券
-	var openid = getrequest('openid');
+	var sid = getrequest('sid'),
+		openid = getrequest('openid'),
+		requestTime = getrequest('tm'),
+		requestTkey = getrequest('tkey');
+	var from = getrequest('from');  // 区分进入这页面的途径
 	var snum;
 	
 	
 	var canNotUseCouponList,  // 存储用户不可使用代金券数组
 		canUseCouponList;  // 存储用户可用代金券数组
+		
+	if(from !== 'weixin'){
+		$('.vice-nav').show();
+	}
 	
 	//  代表点击的是暂不可用的代金券
 	if(notUse==='notUse'){
@@ -85,11 +93,11 @@ $(function(){
 	var userInfor = window.localStorage.getItem('userInfor');
 	userInfor = JSON.parse(userInfor);
 	$('.box-button').on('tap', '.btn-use', function(){
-		console.log(userInfor.phone);
-		if(userInfor.phone==0){
-			$('.popup-validate').show();
-		}else{
+//		console.log(userInfor.phone);
+		if(userInfor.phone!=0){
 			scanQRCode(snum);
+		}else{
+			$('.popup-validate').show();
 		}
 	});
 	
@@ -170,7 +178,8 @@ $(function(){
 	
 	// 点击查看代金券的适用门店
 	$('.mui-content').on('tap', '.applicable-store', function(){
-		window.location.href = "http://new.29mins.com/weixin/page/applicableStore.php?dataNums="+dataNums+'&notUse='+notUse;
+		
+		window.location.href = "http://new.29mins.com/weixin/page/applicableStore.php?dataNums="+dataNums+'&notUse='+notUse+"&from="+from+'&openid='+openid+'&sid='+sid+'&tm='+requestTime+'&tkey='+requestTkey;
 	});
 	
 	// 调用扫描二维码接口
@@ -191,7 +200,7 @@ $(function(){
 						
 						if(e.errCode==='1001'){
 							alert(e.msg);
-							window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?openid="+openid+'&from=weixin';
+							window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?openid="+openid+'&from=weixin'+'&sid='+sid+'&tm='+requestTime+'&tkey='+requestTkey;
 						}else{
 							mui.toast(e.msg);
 						}
@@ -202,6 +211,21 @@ $(function(){
 			}
 		});
 	}
+	// 底部副导航栏的页面跳转
+	// 返回
+	$('.vice-nav').on('tap', '.nav-back',function(){
+//		window.location.reload();
+		window.location.replace(document.referrer); //返回并刷新页面;document.referrer :前一个页面的URL
+	});
+	// 我的卡劵
+	$('.vice-nav').on('tap', '.nav-coupons',function(){
+		window.location.href = "http://new.29mins.com/weixin/page/myCoupons.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
+	});
+	// 技师列表
+	$('.vice-nav').on('tap', '.nav-techlist',function(){
+//		window.location.reload();
+		window.location.href = "http://new.29mins.com/weixin/page/technicianList.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
+	});
 
 });
 

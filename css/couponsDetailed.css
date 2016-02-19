@@ -62,6 +62,10 @@
 	line-height: 1;
 	letter-spacing: 1px;
 	margin-bottom: 20px;
+	-moz-user-select: text;  
+	-webkit-user-select: text;  
+	-ms-user-select: text; 
+	user-select: text;
 }
 .box-button{
 	width: auto;

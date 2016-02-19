@@ -1,4 +1,6 @@
-
+*{
+	    -webkit-user-select: text !important;
+}
 .mui-content{
 	color: #887862;
 }
@@ -8,6 +10,14 @@
 }
 .mui-pull-bottom-pocket{
 	left: -60px;
+}
+.mui-pull.tip-marginleft{
+	margin-left: -120px;
+	position: relative;
+	bottom: 0;
+}
+.tip-marginleft.mui-pull .mui-pull-caption{
+	font-size: 25px !important;
 }
 .user-infor-header{
 	width: 100%;
@@ -96,7 +106,7 @@
 #pullrefresh{
 	width: 100%;
 	height: auto;
-	padding: 20px 0 20px 60px;
+	padding: 20px 0 98px 60px;
 }
 .box-technician-infor{
 	float: left;
