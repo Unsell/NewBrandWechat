@@ -1,10 +1,11 @@
 <?php
-if(!strpos($_SERVER["HTTP_USER_AGENT"],"MicroMessenger")) {
-	die('请用微信浏览器打开');
-}
-
 require "/data/api/config/config.core.php";
 require_once "/data/api/class/jssdk.php";
+
+$shopid = isset($_REQUEST['sid']) ? filter($_REQUEST['sid']) : '';
+if(!strpos($_SERVER["HTTP_USER_AGENT"],"MicroMessenger")) {
+	header('Location: http://new.29mins.com/weixin/share/default.php?sid='.$shopid);
+}
 $jssdk = new JSSDK(appID, appsecret);
 $signPackage = $jssdk->GetSignPackage();
 ?>
@@ -76,6 +77,10 @@ $signPackage = $jssdk->GetSignPackage();
 			<a class="nav-back" >返回</a>
 			<a class="nav-coupons">我的卡劵</a>
 			<a class="nav-techlist" >技师列表</a>
+		</div>
+		<!--遮罩层-->
+		<div class="mui-backdrop popup-share">
+			<div class="tip-share">点击右上角的发送给朋友即可把优惠劵发送给朋友</div>
 		</div>
 		<script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>

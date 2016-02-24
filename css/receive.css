@@ -1,0 +1,50 @@
+
+.header{
+	width: 100%;
+	padding: 80px 0 30px;
+	text-align: center;
+	color: #5C0303;
+}
+
+.header .header-title{
+	font-size: 43px;
+	font-weight: 700;
+	letter-spacing: 3px;
+	line-height: 1;
+	margin-bottom: 40px;
+}
+.header p{
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1;
+	color: #5C0303;
+	letter-spacing: 1px;
+}
+.QR-code{
+	width: 100%;
+	text-align: center;
+	background-color: #ECE6E6;
+}
+.QR-code .box-img{
+	background-color: white;
+	padding: 20px;
+	width: 320px;
+	height: 320px;
+	margin: 0 auto 20px;
+}
+.QR-code p{
+	color: #8B8989;
+	font-size: 21px;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: 3px;
+}
+
+
+
+
+
+
+
+
+

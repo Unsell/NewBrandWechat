@@ -226,6 +226,16 @@ $(function(){
 //		window.location.reload();
 		window.location.href = "http://new.29mins.com/weixin/page/technicianList.php?sid="+sid+'&openid='+openid+'&tm='+requestTime+'&tkey='+requestTkey;
 	});
+	
+	// 送给朋友
+	$('.box-button').on('tap', '.btn-share',function(){
+
+		$('.popup-share').show();
+	});
+	$('.popup-share').on('tap',function(){
+		
+		$('.popup-share').hide();
+	})
 
 });
 

@@ -11,12 +11,20 @@
 .mui-pull-bottom-pocket{
 	left: -60px;
 }
-.mui-pull.tip-marginleft{
-	margin-left: -120px;
-	position: relative;
-	bottom: 0;
-}
+
 .tip-marginleft.mui-pull .mui-pull-caption{
+	font-size: 25px !important;
+}
+.bottom-tip{
+	font-size: 25px;
+    font-weight: 700;
+    text-align: center;
+    color: rgba(0,0,0,0.6);
+    width: 100%;
+    float: left;
+    margin-left: -60px;
+}
+.bottom-tip .mui-icon-pulldown{
 	font-size: 25px !important;
 }
 .user-infor-header{
@@ -106,7 +114,7 @@
 #pullrefresh{
 	width: 100%;
 	height: auto;
-	padding: 20px 0 98px 60px;
+	padding: 20px 0 70px 60px;
 }
 .box-technician-infor{
 	float: left;

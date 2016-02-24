@@ -1,10 +1,12 @@
 <?php
-if(!strpos($_SERVER["HTTP_USER_AGENT"],"MicroMessenger")) {
-	die('请用微信浏览器打开');
-}
-
 require "/data/api/config/config.core.php";
 require_once "/data/api/class/jssdk.php";
+
+$shopid = isset($_REQUEST['sid']) ? filter($_REQUEST['sid']) : '';
+if(!strpos($_SERVER["HTTP_USER_AGENT"],"MicroMessenger")) {
+	header('Location: http://new.29mins.com/weixin/share/default.php?sid='.$shopid);
+}
+
 $jssdk = new JSSDK(appID, appsecret);
 $signPackage = $jssdk->GetSignPackage();
 ?>
